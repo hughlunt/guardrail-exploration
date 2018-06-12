@@ -1,4 +1,4 @@
-name := "akka-quickstart-scala"
+name := "site-budgets"
 
 version := "1.0"
 

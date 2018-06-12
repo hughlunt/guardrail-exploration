@@ -19,5 +19,4 @@ https://jira.mdsol.com/browse/MCC-
 - [ ] Error handling is properly addressed
 - [ ] Security concerns are properly addressed
 - [ ] Notified other teams of impact (e.g. Dev, SD, PS)
-- [X] Updated [confluence](https://learn.mdsol.com/display/PAYMENTS/Site+Invoices+Service+API)
 - [ ] PR ready for merging
