@@ -5,6 +5,6 @@ sbt dist
 
 docker build -t sitebudgets .
 
-docker tag sitebudgets mdsol.jfrog.io/mdsol/payments-docker/sitebudgets:latest
+docker tag sitebudgets mdsol-payments-docker.jfrog.io/sitebudgets
 
-docker push mdsol.jfrog.io/mdsol/payments-docker/sitebudgets:latest
+docker push mdsol-payments-docker.jfrog.io/sitebudgets
