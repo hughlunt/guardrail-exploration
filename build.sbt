@@ -1,13 +1,17 @@
-name := "site-budgets"
+name := """site_budgets"""
+organization := "com.mdsol"
 
-version := "1.0"
+version := "1.0-SNAPSHOT"
+
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.12.6"
 
-lazy val akkaVersion = "2.5.12"
+libraryDependencies += guice
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 
-libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-  "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
-  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
-)
+// Adds additional packages into Twirl
+//TwirlKeys.templateImports += "com.mdsol.controllers._"
+
+// Adds additional packages into conf/routes
+// play.sbt.routes.RoutesKeys.routesImport += "com.mdsol.binders._"
