@@ -1,6 +1,15 @@
 language: scala
 jdk: oraclejdk8
 scala: 2.12.4
+jobs:
+  include:
+  # -----------------------
+  # Tests
+  # -----------------------
+  - stage: Tests
+    script:
+    - sbt ++$TRAVIS_SCALA_VERSION test
+    env: NAME="Unit tests"
 env:
   global:
   # Artifactory Username
