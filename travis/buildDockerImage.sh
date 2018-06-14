@@ -5,7 +5,7 @@ sbt dist
 
 docker build -t sitebudgets .
 
-docker login mdsol-payments-docker.jfrog.io
+docker login -u="payments-admin" -p="AP8VmfDrdXmMzoBGP4rGDTFUbry" mdsol-payments-docker.jfrog.io
 
 docker tag sitebudgets mdsol-payments-docker.jfrog.io/sitebudgets
 
