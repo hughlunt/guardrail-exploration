@@ -13,6 +13,7 @@
       "api": 2048
     },
     "admin_tasks": {
+      "greeting": "echo hello_world"
     }
   }
 }
