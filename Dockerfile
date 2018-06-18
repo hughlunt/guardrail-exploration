@@ -3,7 +3,7 @@ COPY . /app
 WORKDIR /app
 RUN sbt dist
 
-FROM mdsol/java10-jdk as build_image
+FROM mdsol/java10-jre as build_image
 RUN mkdir /svc && mkdir -p /tmp/zip
 COPY --from=builder /app/target/universal/*.zip /tmp/zip
 RUN unzip -d /svc /tmp/zip/*.zip && rm -rf /tmp/zip && mv /svc/*/* /svc/ && rm /svc/bin/*.bat && mv /svc/bin/* /svc/bin/start
