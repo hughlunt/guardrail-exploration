@@ -4,7 +4,7 @@
       "echo released"
     ],
     "processes": {
-      "api": "echo running"
+      "api": "/svc/bin/start -Dhttps.port=9443 -Dplay.crypto.secret=secret"
     },
     "listening_ports": {
       "api": [ 9000 ]
@@ -13,7 +13,6 @@
       "api": 2048
     },
     "admin_tasks": {
-      "greeting": "boot greeting"
     }
   }
 }
