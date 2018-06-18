@@ -1,0 +1,19 @@
+{
+  "deploy_env": {
+    "cmd_release": [
+      "echo released"
+    ],
+    "processes": {
+      "api": "/bin/bash /svc/bin/start -Dhttps.port=9443 -Dplay.crypto.secret=secret"
+    },
+    "listening_ports": {
+      "api": [ 9000 ]
+    },
+    "max_ram": {
+      "api": 2048
+    },
+    "admin_tasks": {
+      "greeting": "echo hello_world"
+    }
+  }
+}
