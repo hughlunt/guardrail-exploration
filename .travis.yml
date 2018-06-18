@@ -17,8 +17,6 @@ jobs:
     script:
     - sbt ++$TRAVIS_SCALA_VERSION test
     env: NAME="Unit tests"
-#  - stage: Build, Release and Publish Docker
-#    script: "./travis/buildDockerImage.sh"
 env:
   global:
   # Artifactory Username (ARTIFACTORY_USERNAME)
