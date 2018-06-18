@@ -1,15 +1,19 @@
 {
   "deploy_env": {
     "cmd_release": [
+      "echo released"
     ],
     "processes": {
-      "api":""
+      "api": "echo running"
     },
     "listening_ports": {
+      "api": [ 9000 ]
     },
     "max_ram": {
+      "api": 2048
     },
     "admin_tasks": {
+      "greeting": "boot greeting"
     }
   }
 }
