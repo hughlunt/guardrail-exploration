@@ -10,7 +10,7 @@ It defines the costs and budgets on certain activity that happen during the life
 #### Pre requisites
 
 #### Run
-
+`sbt run`
 #### Run Tests
 
 ### Detailed Information (deployment)
