@@ -5,6 +5,7 @@
 It defines the costs and budgets on certain activity that happen during the lifetime of a trial
 ### Getting Started
 
+
 #### Pre requisites
 
 #### Run
