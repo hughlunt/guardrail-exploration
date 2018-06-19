@@ -16,5 +16,3 @@
 
 #### Build
 Application built for ECS is to check in a .12factor/Dockerfile.
-
-
