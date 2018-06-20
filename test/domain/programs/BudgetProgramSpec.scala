@@ -14,7 +14,7 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
   type Log[A] = Writer[List[String], A]
 
   object TestBudgetInterpreter extends BudgetAlgebra[Log] {
-    override def add(budget: Budget): Log[Unit] = Writer(List("I've added a Budget"), ())
+    override def add(budgetHeader: BudgetHeader): Log[Unit] = Writer(List("I've added a Budget"), ())
   }
 
   object TestBudgetItemInterpreter extends BudgetItemAlgebra[Log] {
@@ -34,15 +34,16 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
         1d
       ))
 
-    val dummyBudget = Budget(
+    val dummyBudgetHeader = BudgetHeader(
       BudgetId(UUID.randomUUID()),
       CtaId(UUID.randomUUID()),
       StudyId(UUID.randomUUID()),
       SiteId(UUID.randomUUID()),
       Instant.now(),
-      Instant.now(),
-      items
+      Instant.now()
     )
+
+    val dummyBudget = Budget(dummyBudgetHeader, items)
 
     val actualResult = new BudgetProgram[Log](TestBudgetInterpreter, TestBudgetItemInterpreter).addBudget(dummyBudget)
 

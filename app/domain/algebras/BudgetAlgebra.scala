@@ -1,10 +1,10 @@
 package domain.algebras
 
-import domain.entities.Budget
+import domain.entities.BudgetHeader
+
 import scala.language.higherKinds
 
 trait BudgetAlgebra[F[_]] {
 
-  def add(budget: Budget): F[Unit]
-
+  def add(budget: BudgetHeader): F[Unit]
 }

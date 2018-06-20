@@ -9,5 +9,4 @@ class BudgetItemInterpreterSpec extends AsyncFlatSpec with Matchers {
     val result: FEither[Unit] = new BudgetItemInterpreter().add(Set())
     result.value.map(either => either shouldBe Left(Error("Error in budget item")))
   }
-
 }
