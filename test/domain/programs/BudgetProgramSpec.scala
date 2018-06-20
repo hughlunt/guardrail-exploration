@@ -3,19 +3,22 @@ package domain.programs
 import java.time.Instant
 import java.util.UUID
 
-import cats.Id
+import cats.data.Writer
+import cats.implicits._
 import domain.algebras.{BudgetAlgebra, BudgetItemAlgebra}
 import domain.entities._
 import org.scalatest.{FlatSpec, Matchers}
 
 class BudgetProgramSpec extends FlatSpec with Matchers {
 
-  object TestBudgetInterpreter extends BudgetAlgebra[Id] {
-    override def add(budget: Budget): Id[Unit] = ()
+  type Log[A] = Writer[List[String], A]
+
+  object TestBudgetInterpreter extends BudgetAlgebra[Log] {
+    override def add(budget: Budget): Log[Unit] = Writer(List("I've added a Budget"), ())
   }
 
-  object TestBudgetItemInterpreter extends BudgetItemAlgebra[Id] {
-    override def add(items: Set[BudgetItem]): Id[Unit] = ()
+  object TestBudgetItemInterpreter extends BudgetItemAlgebra[Log] {
+    override def add(items: Set[BudgetItem]): Log[Unit] = Writer(List("I've added a Budget Item"), ())
   }
 
   it should "add a budget" in {
@@ -41,7 +44,9 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
       items
     )
 
-    new BudgetProgram[Id](TestBudgetInterpreter, TestBudgetItemInterpreter).addBudget(dummyBudget) shouldBe((): Unit)
-  }
+    val actualResult = new BudgetProgram[Log](TestBudgetInterpreter, TestBudgetItemInterpreter).addBudget(dummyBudget)
 
+    actualResult.value shouldBe ((): Unit)
+    actualResult.written shouldBe List("I've added a Budget", "I've added a Budget Item")
+  }
 }
