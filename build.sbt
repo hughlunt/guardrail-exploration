@@ -9,6 +9,7 @@ lazy val root = (project in file("."))
 scalaVersion := "2.12.6"
 
 libraryDependencies += guice
+libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 
 // Adds additional packages into Twirl

@@ -9,11 +9,3 @@ case class Budget(id: BudgetId,
                   validFrom: Instant,
                   validUntil: Instant,
                   budgetItems: Set[BudgetItem])
-
-
-case class BudgetItem(id: BudgetItemId,
-                      activityType: ActivityType,
-                      payee: PayeeId,
-                      validFrom: Instant,
-                      validUntil: Instant,
-                      amount: Double)
