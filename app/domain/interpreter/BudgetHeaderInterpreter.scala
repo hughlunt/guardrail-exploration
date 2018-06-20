@@ -10,6 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class BudgetHeaderInterpreter(implicit ec: ExecutionContext) extends BudgetHeaderAlgebra[FEither] {
   override def add(budgetHeader: BudgetHeader): FEither[Unit] = EitherT.right(Future.successful(()))
 
-  override def retrieve(id: BudgetId): FEither[BudgetHeader] = EitherT(Future.successful(Left(Error(" Error "))))
+  override def retrieve(id: BudgetId): FEither[BudgetHeader] =
+    EitherT[Future, Error, BudgetHeader](Future.failed(new Throwable(" Method not implemented ")))
 
 }
