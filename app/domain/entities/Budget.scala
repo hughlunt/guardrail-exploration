@@ -8,11 +8,11 @@ case class Budget(id: BudgetId,
                   site: SiteId,
                   validFrom: Instant,
                   validUntil: Instant,
-                  eventCostCollection: Set[BudgetItem])
+                  budgetItems: Set[BudgetItem])
 
 
-case class BudgetItem(activityType: String,
-                      id: String,
+case class BudgetItem(id: BudgetItemId,
+                      activityType: ActivityType,
                       payee: PayeeId,
                       validFrom: Instant,
                       validUntil: Instant,
