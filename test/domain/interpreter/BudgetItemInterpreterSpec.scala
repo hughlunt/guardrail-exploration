@@ -1,4 +1,4 @@
-package interpreter
+package domain.interpreter
 
 import domain.entities._
 import org.scalatest.{AsyncFlatSpec, Matchers}
