@@ -22,7 +22,7 @@ package object entities {
 
   case class BudgetItemId(id: Long) extends AnyVal
 
-  type FEither[T] = EitherT[Future, Error, T]
+  type FEither[T] = EitherT[Future, Error, T] // = EitherT[Future[Either[Error, T]]]
 
   case class Error(message: String) extends AnyVal
 
