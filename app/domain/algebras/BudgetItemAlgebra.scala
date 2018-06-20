@@ -5,6 +5,6 @@ import scala.language.higherKinds
 
 trait BudgetItemAlgebra[F[_]] {
 
-  def add(item: BudgetItem): F[Unit]
+  def add(item: Set[BudgetItem]): F[Unit]
 
 }
