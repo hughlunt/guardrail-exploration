@@ -5,7 +5,7 @@ import java.util.UUID
 
 import cats.data.Writer
 import cats.implicits._
-import domain.algebras.{BudgetAlgebra, BudgetItemAlgebra}
+import domain.algebras.{BudgetHeaderAlgebra, BudgetItemAlgebra}
 import domain.entities._
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -13,41 +13,65 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
 
   type Log[A] = Writer[List[String], A]
 
-  object TestBudgetInterpreter extends BudgetAlgebra[Log] {
-    override def add(budgetHeader: BudgetHeader): Log[Unit] = Writer(List("I've added a Budget"), ())
+  object TestBudgetHeaderInterpreter extends BudgetHeaderAlgebra[Log] {
+    override def add(budgetHeader: BudgetHeader): Log[Unit] = Writer(List("I've added a BudgetHeader"), ())
+
+    override def retrieve(id: BudgetId): Log[BudgetHeader] = Writer(List("I've retrieved a BudgetHeader"), dummyBudgetHeader)
+
+    override def retrieveBudgetHeaders(clinicalTrialAgreementId: ClinicalTrialAgreementId): Log[Set[BudgetHeader]] =
+      Writer(List("I've retrieved a BudgetHeader"), Set(dummyBudgetHeader))
   }
 
   object TestBudgetItemInterpreter extends BudgetItemAlgebra[Log] {
-    override def add(items: Set[BudgetItem]): Log[Unit] = Writer(List("I've added a Budget Item"), ())
+    override def add(items: Set[BudgetItem]): Log[Unit] = Writer(List("I've added BudgetItems"), ())
+
+    override def retrieveItems(id: BudgetId): Log[Set[BudgetItem]] = Writer(List("I've retrieved BudgetItems"), items)
   }
 
-  it should "add a budget" in {
+  val budgetId = BudgetId(UUID.randomUUID())
+  val clinicalTrialAgreementId = ClinicalTrialAgreementId(UUID.randomUUID())
 
-    val items = Set(
-      BudgetItem(
-        BudgetItemId(2),
-        BudgetId(UUID.randomUUID()),
-        ActivityType(UUID.randomUUID()),
-        PayeeId(UUID.randomUUID()),
-        Instant.now(),
-        Instant.now(),
-        1d
-      ))
-
-    val dummyBudgetHeader = BudgetHeader(
-      BudgetId(UUID.randomUUID()),
-      CtaId(UUID.randomUUID()),
-      StudyId(UUID.randomUUID()),
-      SiteId(UUID.randomUUID()),
+  val items = Set(
+    BudgetItem(
+      BudgetItemId(2),
+      budgetId,
+      ActivityType(UUID.randomUUID()),
+      PayeeId(UUID.randomUUID()),
       Instant.now(),
-      Instant.now()
-    )
+      Instant.now(),
+      1d
+    ))
 
-    val dummyBudget = Budget(dummyBudgetHeader, items)
+  val dummyBudgetHeader = BudgetHeader(
+    budgetId,
+    clinicalTrialAgreementId,
+    StudyId(UUID.randomUUID()),
+    SiteId(UUID.randomUUID()),
+    Instant.now(),
+    Instant.now()
+  )
 
-    val actualResult = new BudgetProgram[Log](TestBudgetInterpreter, TestBudgetItemInterpreter).addBudget(dummyBudget)
+  val dummyBudget = Budget(dummyBudgetHeader, items)
+
+  it should "add a budget" in {
+    val actualResult = new BudgetProgram[Log](TestBudgetHeaderInterpreter, TestBudgetItemInterpreter).addBudget(dummyBudget)
 
     actualResult.value shouldBe ((): Unit)
-    actualResult.written shouldBe List("I've added a Budget", "I've added a Budget Item")
+    actualResult.written shouldBe List("I've added a BudgetHeader", "I've added BudgetItems")
+  }
+
+  it should "retrieve budget" in {
+
+    val actualResult = new BudgetProgram[Log](TestBudgetHeaderInterpreter, TestBudgetItemInterpreter).retrieveBudget(budgetId)
+
+    actualResult.value shouldBe dummyBudget
+    actualResult.written shouldBe List("I've retrieved a BudgetHeader", "I've retrieved BudgetItems")
+  }
+
+  it should "retrieve a set of budgets given Clinical Trial Agreement Id" in {
+    val actualResult = new BudgetProgram[Log](TestBudgetHeaderInterpreter, TestBudgetItemInterpreter).retrieveBudgets(clinicalTrialAgreementId)
+
+    actualResult.value shouldBe Set(dummyBudgetHeader)
+    actualResult.written shouldBe List("I've retrieved a BudgetHeader")
   }
 }
