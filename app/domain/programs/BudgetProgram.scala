@@ -4,7 +4,7 @@ import cats.Monad
 import cats.syntax.flatMap._
 import cats.syntax.functor._
 import domain.algebras.{BudgetHeaderAlgebra, BudgetItemAlgebra}
-import domain.entities.{Budget, BudgetId}
+import domain.entities.{Budget, BudgetHeader, BudgetId, ClinicalTrialAgreementId}
 
 import scala.language.higherKinds
 
@@ -21,4 +21,7 @@ class BudgetProgram[F[_] : Monad](budgetAlgebra: BudgetHeaderAlgebra[F], budgetI
       header <- budgetAlgebra.retrieve(id)
       items <- budgetItemAlgebra.retrieveItems(id)
     } yield Budget(header, items)
+
+  def retrieveBudgets(clinicalTrialAgreementId: ClinicalTrialAgreementId): F[Set[BudgetHeader]] =
+    budgetAlgebra.retrieveBudgetHeaders(clinicalTrialAgreementId)
 }

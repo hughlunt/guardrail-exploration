@@ -10,7 +10,7 @@ class BudgetHeaderInterpreterSpec extends AsyncFlatSpec with Matchers {
 
   val dummyBudgetHeader = BudgetHeader(
     BudgetId(UUID.randomUUID()),
-    CtaId(UUID.randomUUID()),
+    ClinicalTrialAgreementId(UUID.randomUUID()),
     StudyId(UUID.randomUUID()),
     SiteId(UUID.randomUUID()),
     Instant.now(),
@@ -26,5 +26,11 @@ class BudgetHeaderInterpreterSpec extends AsyncFlatSpec with Matchers {
     recoverToSucceededIf[Throwable] {
       new BudgetHeaderInterpreter().retrieve(BudgetId(UUID.randomUUID())).value
     }
+  }
+
+  it should "return a budget headers  by clinical trail agreement id" in {
+    val result = new BudgetHeaderInterpreter().retrieveBudgetHeaders(ClinicalTrialAgreementId(UUID.randomUUID()))
+    result.value.map(either => either shouldBe Right(Set()))
+
   }
 }

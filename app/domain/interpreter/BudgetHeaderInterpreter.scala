@@ -3,7 +3,8 @@ package domain.interpreter
 import cats.data.EitherT
 import cats.implicits._
 import domain.algebras.BudgetHeaderAlgebra
-import domain.entities.{BudgetHeader, BudgetId, FEither, Error}
+import domain.entities
+import domain.entities.{BudgetHeader, BudgetId, Error, FEither}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -12,5 +13,8 @@ class BudgetHeaderInterpreter(implicit ec: ExecutionContext) extends BudgetHeade
 
   override def retrieve(id: BudgetId): FEither[BudgetHeader] =
     EitherT[Future, Error, BudgetHeader](Future.failed(new Throwable(" Method not implemented ")))
+
+  override def retrieveBudgetHeaders(clinicalTrialAgreementId: entities.ClinicalTrialAgreementId): FEither[Set[BudgetHeader]] =
+    EitherT.right(Future.successful(Set()))
 
 }

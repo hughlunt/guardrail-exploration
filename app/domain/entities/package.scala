@@ -16,7 +16,7 @@ package object entities {
 
   case class BudgetId(id: UUID) extends AnyVal
 
-  case class CtaId(id: UUID) extends AnyVal
+  case class ClinicalTrialAgreementId(id: UUID) extends AnyVal
 
   case class ActivityType(id: UUID) extends AnyVal
 

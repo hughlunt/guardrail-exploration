@@ -17,6 +17,9 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
     override def add(budgetHeader: BudgetHeader): Log[Unit] = Writer(List("I've added a BudgetHeader"), ())
 
     override def retrieve(id: BudgetId): Log[BudgetHeader] = Writer(List("I've retrieved a BudgetHeader"), dummyBudgetHeader)
+
+    override def retrieveBudgetHeaders(clinicalTrialAgreementId: ClinicalTrialAgreementId): Log[Set[BudgetHeader]] =
+      Writer(List("I've retrieved a BudgetHeader"), Set(dummyBudgetHeader))
   }
 
   object TestBudgetItemInterpreter extends BudgetItemAlgebra[Log] {
@@ -26,6 +29,7 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
   }
 
   val budgetId = BudgetId(UUID.randomUUID())
+  val clinicalTrialAgreementId = ClinicalTrialAgreementId(UUID.randomUUID())
 
   val items = Set(
     BudgetItem(
@@ -40,7 +44,7 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
 
   val dummyBudgetHeader = BudgetHeader(
     budgetId,
-    CtaId(UUID.randomUUID()),
+    clinicalTrialAgreementId,
     StudyId(UUID.randomUUID()),
     SiteId(UUID.randomUUID()),
     Instant.now(),
@@ -64,4 +68,10 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
     actualResult.written shouldBe List("I've retrieved a BudgetHeader", "I've retrieved BudgetItems")
   }
 
+  it should "retrieve a set of budgets given Clinical Trial Agreement Id" in {
+    val actualResult = new BudgetProgram[Log](TestBudgetHeaderInterpreter, TestBudgetItemInterpreter).retrieveBudgets(clinicalTrialAgreementId)
+
+    actualResult.value shouldBe Set(dummyBudgetHeader)
+    actualResult.written shouldBe List("I've retrieved a BudgetHeader")
+  }
 }
