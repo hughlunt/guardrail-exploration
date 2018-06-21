@@ -17,6 +17,9 @@ jobs:
     script:
     - sbt ++$TRAVIS_SCALA_VERSION test
     env: NAME="Unit tests"
+    
+after_success:
+  - ./travis/releaseTag.sh
 env:
   global:
   # Artifactory Username (ARTIFACTORY_USERNAME)
