@@ -6,36 +6,21 @@ import com.gu.scanamo.syntax._
 
 class DynamoClientSpec extends AsyncFlatSpec with Matchers {
   // mock the client
-
-
-
-
-
-  //
-
-
-
-
-  val client = DynamoClient.client()
-  import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType._
-  val farmersTableResult = DynamoClient.createTable(client)("farmer")('name -> S)
-
-  case class Farm(animals: List[String])
-  case class Farmer(name: String, age: Long, farm: Farm)
-
-  val table = Table[Farmer]("farmer")
-
-  Scanamo.exec(client)(table.put(Farmer("McDonald", 156L, Farm(List("sheep", "cow")))))
-
-  val result = Scanamo.exec(client)(table.get('name -> "McDonald"))
-
-  result shouldBe Some(Right(Farmer("McDonald",156, Farm(List("sheep", "cow")))))
-
-
-
-
-
-
+//
+//  val client = DynamoClient.client()
+//  import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType._
+//  val farmersTableResult = DynamoClient.createTable(client)("farmer")('name -> S)
+//
+//  case class Farm(animals: List[String])
+//  case class Farmer(name: String, age: Long, farm: Farm)
+//
+//  val table = Table[Farmer]("farmer")
+//
+//  Scanamo.exec(client)(table.put(Farmer("McDonald", 156L, Farm(List("sheep", "cow")))))
+//
+//  val result = Scanamo.exec(client)(table.get('name -> "McDonald"))
+//
+//  result shouldBe Some(Right(Farmer("McDonald",156, Farm(List("sheep", "cow")))))
 
 
 }

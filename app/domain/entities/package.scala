@@ -24,6 +24,14 @@ package object entities {
 
   type FEither[T] = EitherT[Future, Error, T] // = EitherT[Future[Either[Error, T]]]
 
-  case class Error(message: String) extends AnyVal
+  sealed trait Error {
+    val message: String
+  }
+
+  case class BudgetHeaderWriteError(message: String) extends Error
+
+  case object DataBaseConnectionError extends Error {
+    val message: String = "Failed to connect to database."
+  }
 
 }
