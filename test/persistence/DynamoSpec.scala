@@ -1,33 +1,23 @@
 package persistence
 
-import java.time.Instant
-import java.util.UUID
-
-import com.amazonaws.client.builder.AwsClientBuilder
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
-import com.amazonaws.services.dynamodbv2.document.DynamoDB
-import domain.entities._
 import org.scalatest._
+import com.gu.scanamo._
+import com.gu.scanamo.syntax._
 
-trait DynamoTestClient {
-  lazy val client = AmazonDynamoDBClientBuilder.standard.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-1")).build
-}
+class DynamoSpec extends AsyncFlatSpec with Matchers {
+  val client = BudgetClient.client()
+  import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType._
+  val farmersTableResult = BudgetClient.createTable(client)("farmer")('name -> S)
 
-class DynamoSpec extends AsyncFlatSpec with Matchers with DynamoTestClient {
+  case class Farm(animals: List[String])
+  case class Farmer(name: String, age: Long, farm: Farm)
 
-  val dummyBudgetHeader = BudgetHeader(
-    BudgetId(UUID.randomUUID()),
-    ClinicalTrialAgreementId(UUID.randomUUID()),
-    StudyId(UUID.randomUUID()),
-    SiteId(UUID.randomUUID()),
-    Instant.now(),
-    Instant.now()
-  )
-  lazy val dynamo = new DynamoDB(client)
-  it should "return successful future" in {
-    val budget = new BudgetClient
-    budget.create(dummyBudgetHeader);
-    val x = 8
-    x shouldBe 8
-  }
+  val table = Table[Farmer]("farmer")
+
+  Scanamo.exec(client)(table.put(Farmer("McDonald", 156L, Farm(List("sheep", "cow")))))
+
+  val result = Scanamo.exec(client)(table.get('name -> "McDonald"))
+
+  result shouldBe Some(Right(Farmer("McDonald",156, Farm(List("sheep", "cow")))))
+
 }
