@@ -3,10 +3,16 @@ package persistence
 import java.time.Instant
 import java.util.UUID
 
+import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient
+import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.gu.scanamo.Scanamo
-import com.gu.scanamo.ops.{ScanamoOps, ScanamoOpsA}
+import com.gu.scanamo.ops.ScanamoOps
+import com.gu.scanamo.request.ScanamoPutRequest
 import domain.entities._
-import org.mockito.Mockito.{when}
+import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito.when
 import org.scalatest.mockito._
 import org.scalatest.{AsyncFlatSpec, Matchers}
 
@@ -29,8 +35,19 @@ class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoS
   )
 
   it should "Insert given Budget header into DB" in {
+//    val scanamoPutRequest: ScanamoPutRequest = new ScanamoPutRequest("", new AttributeValue() ,Option.empty)
+//
+//    when(Scanamo
+//      .exec(mockDynamoDBClient.client())
+//       (any[ScanamoOps[ScanamoPutRequest]]))
+//      .thenReturn(scanamoPutRequest)
 
-    when(Scanamo.exec(mockDynamoDBClient.client())(any[ScanamoOps[_]])) thenReturn None
+    val fakeClient  = AmazonDynamoDBAsyncClient.asyncBuilder()
+      .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("dummy", "credentials")))
+      .withEndpointConfiguration(new EndpointConfiguration("http://localhost:8000", "us-east-1"))
+      .build()
+
+    when(mockDynamoDBClient.client()) thenReturn fakeClient
 
     val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
 
