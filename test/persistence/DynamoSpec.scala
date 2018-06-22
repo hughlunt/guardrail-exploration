@@ -5,9 +5,9 @@ import com.gu.scanamo._
 import com.gu.scanamo.syntax._
 
 class DynamoSpec extends AsyncFlatSpec with Matchers {
-  val client = BudgetClient.client()
+  val client = DynamoClient.client()
   import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType._
-  val farmersTableResult = BudgetClient.createTable(client)("farmer")('name -> S)
+  val farmersTableResult = DynamoClient.createTable(client)("farmer")('name -> S)
 
   case class Farm(animals: List[String])
   case class Farmer(name: String, age: Long, farm: Farm)
