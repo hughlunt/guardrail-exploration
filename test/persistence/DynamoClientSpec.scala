@@ -4,7 +4,18 @@ import org.scalatest._
 import com.gu.scanamo._
 import com.gu.scanamo.syntax._
 
-class DynamoSpec extends AsyncFlatSpec with Matchers {
+class DynamoClientSpec extends AsyncFlatSpec with Matchers {
+  // mock the client
+
+
+
+
+
+  //
+
+
+
+
   val client = DynamoClient.client()
   import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType._
   val farmersTableResult = DynamoClient.createTable(client)("farmer")('name -> S)
@@ -19,5 +30,12 @@ class DynamoSpec extends AsyncFlatSpec with Matchers {
   val result = Scanamo.exec(client)(table.get('name -> "McDonald"))
 
   result shouldBe Some(Right(Farmer("McDonald",156, Farm(List("sheep", "cow")))))
+
+
+
+
+
+
+
 
 }
