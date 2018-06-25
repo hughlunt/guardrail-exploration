@@ -29,7 +29,7 @@ class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoS
   it should "Insert given Budget header into DB" in {
     import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType._
 
-    dynamoDBClient.createTable(dynamoDBClient.client())("BudgetHeaders1")('id -> S)
+//    dynamoDBClient.createTable(dynamoDBClient.client())("BudgetHeaders1")('id -> S)
 
     val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
 

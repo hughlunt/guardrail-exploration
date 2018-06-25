@@ -8,15 +8,15 @@ import scala.concurrent.Future
 
 package object entities {
 
-  case class StudyId(id: UUID) extends AnyVal
+  case class StudyId(studyId: UUID) extends AnyVal
 
-  case class SiteId(id: UUID) extends AnyVal
+  case class SiteId(siteId: UUID) extends AnyVal
 
   case class PayeeId(id: UUID) extends AnyVal
 
   case class BudgetId(id: UUID) extends AnyVal
 
-  case class ClinicalTrialAgreementId(id: UUID) extends AnyVal
+  case class ClinicalTrialAgreementId(ctaId: UUID) extends AnyVal
 
   case class ActivityType(id: UUID) extends AnyVal
 
