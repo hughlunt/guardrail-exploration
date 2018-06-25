@@ -24,7 +24,7 @@ class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionCon
   implicit val idFormat = DynamoFormat.coercedXmap[BudgetId, String, IllegalArgumentException](
     s => BudgetId(UUID.fromString(s))
   )(
-    _.toString
+    _.id.toString
   )
 
   override def insertBudgetHeader(budgetHeader: BudgetHeader): FEither[Unit] = {
@@ -42,7 +42,8 @@ class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionCon
           case Left(error) => Left(BudgetHeaderWriteError(error.toString))
           case Right(_) => Right(())
       }
-    ))
+    ).recover{case e: Throwable => Left(DataBaseConnectionError)}
+    )
   }
 
   override def insertBudgetItems(budgetItems: Set[BudgetItem]): FEither[Unit] = ???

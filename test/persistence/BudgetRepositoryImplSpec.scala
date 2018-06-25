@@ -31,6 +31,7 @@ class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoS
 
 //    dynamoDBClient.createTable(dynamoDBClient.client())("BudgetHeaders1")('id -> S)
 
+
     val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
 
     result.value.map(_ shouldBe Right(()))
