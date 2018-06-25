@@ -12,7 +12,7 @@ libraryDependencies += guice
 libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 libraryDependencies += "com.gu" %% "scanamo" % "1.0.0-M6"
-libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19" % Test
+libraryDependencies += "org.mockito" % "mockito-core" % "2.19.0" % Test
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.mdsol.controllers._"

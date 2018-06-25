@@ -3,9 +3,16 @@ package persistence
 import java.time.Instant
 import java.util.UUID
 
+import com.gu.scanamo._
+import com.gu.scanamo.error.DynamoReadError
+import com.gu.scanamo.ops.ScanamoOps
 import domain.entities._
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito._
 import org.scalatest.mockito._
 import org.scalatest.{AsyncFlatSpec, Matchers}
+
+import scala.concurrent.Future
 
 
 class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoSugar {
@@ -27,11 +34,9 @@ class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoS
   )
 
   it should "Insert given Budget header into DB" in {
-    import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType._
+    type ScanOps[A] = ScanamoOps[Option[Either[DynamoReadError, A]]]
 
-//    dynamoDBClient.createTable(dynamoDBClient.client())("BudgetHeaders1")('id -> S)
-
-
+    when(ScanamoAsync.exec(dynamoDBClient.client())(any[ScanOps[BudgetHeader]]())) thenReturn Future.successful(None)
     val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
 
     result.value.map(_ shouldBe Right(()))

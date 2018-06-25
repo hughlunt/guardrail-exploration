@@ -4,13 +4,14 @@ import java.time.Instant
 import java.util.UUID
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.free.Free
 import com.gu.scanamo._
 import com.gu.scanamo.error.DynamoReadError
+import com.gu.scanamo.ops.{ScanamoOps, ScanamoOpsA}
 import domain.entities._
 import domain.interfaces.BudgetRepository
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionContext)
   extends BudgetRepository {
@@ -29,10 +30,10 @@ class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionCon
 
   override def insertBudgetHeader(budgetHeader: BudgetHeader): FEither[Unit] = {
 
-    val budgetHeaderTable = Table[BudgetHeader]("BudgetHeaders1")
+    val budgetTable = Table[Budget]("Budget")
 
-    val operations = for {
-      result <- budgetHeaderTable.put(budgetHeader)
+    val operations: ScanamoOps[Option[Either[DynamoReadError, Budget]]] = for {
+      result <- budgetTable.put(Budget(budgetHeader, Set()))
     } yield result
 
 
