@@ -21,7 +21,8 @@ class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionCon
   )
 
   override def insertBudgetHeader(budgetHeader: BudgetHeader): FEither[Unit] = {
-    val budgetHeaderTable = Table[BudgetHeader]("BudgetHeaders")
+
+    val budgetHeaderTable = Table[BudgetHeader]("BudgetHeaders1")
 
     val operations = for {
       result <- budgetHeaderTable.put(budgetHeader)
