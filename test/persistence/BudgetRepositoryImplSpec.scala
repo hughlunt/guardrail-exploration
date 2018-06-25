@@ -3,7 +3,7 @@ package persistence
 import java.time.Instant
 import java.util.UUID
 
-import com.gu.scanamo._
+import com.gu.scanamo.{ScanamoAsync, _}
 import com.gu.scanamo.error.DynamoReadError
 import com.gu.scanamo.ops.ScanamoOps
 import domain.entities._

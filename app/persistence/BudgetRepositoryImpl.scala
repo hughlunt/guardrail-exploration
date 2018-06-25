@@ -33,7 +33,7 @@ class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionCon
     val budgetTable = Table[Budget]("Budget")
 
     val operations: ScanamoOps[Option[Either[DynamoReadError, Budget]]] = for {
-      result <- budgetTable.put(Budget(budgetHeader, Set()))
+      result <- budgetTable.put(Budget(budgetHeader.id,budgetHeader, Set()))
     } yield result
 
 
