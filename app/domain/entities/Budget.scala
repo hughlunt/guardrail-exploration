@@ -1,6 +1,4 @@
 package domain.entities
 
-
-case class Budget(id: BudgetId,
-                  budgetHeader: BudgetHeader,
+case class Budget(budgetHeader: BudgetHeader,
                   budgetItems: Set[BudgetItem])

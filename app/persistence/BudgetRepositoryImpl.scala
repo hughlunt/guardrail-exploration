@@ -4,16 +4,16 @@ import java.time.Instant
 import java.util.UUID
 
 import cats.data.EitherT
-import cats.free.Free
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsync
 import com.gu.scanamo._
 import com.gu.scanamo.error.DynamoReadError
-import com.gu.scanamo.ops.{ScanamoOps, ScanamoOpsA}
+import com.gu.scanamo.ops.ScanamoOps
 import domain.entities._
 import domain.interfaces.BudgetRepository
 
 import scala.concurrent.ExecutionContext
 
-class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionContext)
+class BudgetRepositoryImpl(dynamoClient: AmazonDynamoDBAsync)(implicit ec: ExecutionContext)
   extends BudgetRepository {
 
   implicit val jodaStringFormat = DynamoFormat.coercedXmap[Instant, String, IllegalArgumentException](
@@ -30,15 +30,15 @@ class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionCon
 
   override def insertBudgetHeader(budgetHeader: BudgetHeader): FEither[Unit] = {
 
-    val budgetTable = Table[Budget]("Budget")
+    val budgetTable = Table[BudgetHeader]("Budget")
 
-    val operations: ScanamoOps[Option[Either[DynamoReadError, Budget]]] = for {
-      result <- budgetTable.put(Budget(budgetHeader.id,budgetHeader, Set()))
+    val operations: ScanamoOps[Option[Either[DynamoReadError, BudgetHeader]]] = for {
+      result <- budgetTable.put(budgetHeader)
     } yield result
 
 
     EitherT(
-      ScanamoAsync.exec(dynamoClient.client())(operations).map(
+      ScanamoAsync.exec(dynamoClient)(operations).map(
         _.fold[Either[Error, Unit]](Right(())) {
           case Left(error) => Left(BudgetHeaderWriteError(error.toString))
           case Right(_) => Right(())

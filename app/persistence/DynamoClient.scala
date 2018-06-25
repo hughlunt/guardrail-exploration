@@ -4,9 +4,11 @@ import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.dynamodbv2._
 import com.amazonaws.services.dynamodbv2.model._
+import com.google.inject.Singleton
 
 import scala.collection.JavaConverters._
 
+@Singleton
 class DynamoClient {
   def client(): AmazonDynamoDBAsync =
     AmazonDynamoDBAsyncClient.asyncBuilder()
