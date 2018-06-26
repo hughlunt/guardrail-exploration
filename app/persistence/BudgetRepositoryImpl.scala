@@ -4,7 +4,6 @@ import java.time.Instant
 import java.util.UUID
 
 import cats.data.EitherT
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsync
 import com.gu.scanamo._
 import com.gu.scanamo.error.DynamoReadError
 import com.gu.scanamo.ops.ScanamoOps
@@ -13,7 +12,7 @@ import domain.interfaces.BudgetRepository
 
 import scala.concurrent.ExecutionContext
 
-class BudgetRepositoryImpl(dynamoClient: AmazonDynamoDBAsync)(implicit ec: ExecutionContext)
+class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionContext)
   extends BudgetRepository {
 
   implicit val jodaStringFormat = DynamoFormat.coercedXmap[Instant, String, IllegalArgumentException](
@@ -38,7 +37,7 @@ class BudgetRepositoryImpl(dynamoClient: AmazonDynamoDBAsync)(implicit ec: Execu
 
 
     EitherT(
-      ScanamoAsync.exec(dynamoClient)(operations).map(
+      dynamoClient.runScanamoAsync(operations).map(
         _.fold[Either[Error, Unit]](Right(())) {
           case Left(error) => Left(BudgetHeaderWriteError(error.toString))
           case Right(_) => Right(())
@@ -46,6 +45,5 @@ class BudgetRepositoryImpl(dynamoClient: AmazonDynamoDBAsync)(implicit ec: Execu
     ).recover{case e: Throwable => Left(DataBaseConnectionError)}
     )
   }
-
-  override def insertBudgetItems(budgetItems: Set[BudgetItem]): FEither[Unit] = ???
+  //  override def insertBudgetItems(budgetItems: Set[BudgetItem]): FEither[Unit] = ???
 }

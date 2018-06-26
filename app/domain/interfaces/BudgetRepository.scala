@@ -6,6 +6,5 @@ trait BudgetRepository {
 
   def insertBudgetHeader(budgetHeader: BudgetHeader): FEither[Unit]
 
-  def insertBudgetItems(budgetItems: Set[BudgetItem]): FEither[Unit]
-
+//  def insertBudgetItems(budgetItems: Set[BudgetItem]): FEither[Unit]
 }

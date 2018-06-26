@@ -5,30 +5,37 @@ import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.dynamodbv2._
 import com.amazonaws.services.dynamodbv2.model._
 import com.google.inject.Singleton
+import com.gu.scanamo.ScanamoAsync
+import com.gu.scanamo.error.DynamoReadError
+import com.gu.scanamo.ops.ScanamoOps
 
 import scala.collection.JavaConverters._
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DynamoClient {
-  def client(): AmazonDynamoDBAsync =
-    AmazonDynamoDBAsyncClient.asyncBuilder()
-      .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("dummy", "credentials")))
-      .withEndpointConfiguration(new EndpointConfiguration("http://localhost:8000", "us-east-1"))
-      .build()
 
-  def createTable(client: AmazonDynamoDB)(tableName: String)(attributes: (Symbol, ScalarAttributeType)*) = {
+  lazy val client: AmazonDynamoDBAsync = AmazonDynamoDBAsyncClient.asyncBuilder()
+    .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("dummy", "credentials")))
+    .withEndpointConfiguration(new EndpointConfiguration("http://localhost:8000", "us-east-1"))
+    .build()
+
+  def runScanamoAsync[T](operations: ScanamoOps[Option[Either[DynamoReadError, T]]])
+                        (implicit executionContext: ExecutionContext): Future[Option[Either[DynamoReadError, T]]] =
+    ScanamoAsync.exec(client)(operations)
+
+  private def createTable(tableName: String)(attributes: (Symbol, ScalarAttributeType)*): CreateTableResult =
     client.createTable(
       attributeDefinitions(attributes),
       tableName,
       keySchema(attributes),
       arbitraryThroughputThatIsIgnoredByDynamoDBLocal
     )
-  }
 
-  def withTable[T](client: AmazonDynamoDB)(tableName: String)(attributeDefinitions: (Symbol, ScalarAttributeType)*)(
+  private def withTable[T](client: AmazonDynamoDB)(tableName: String)(attributeDefinitions: (Symbol, ScalarAttributeType)*)(
     thunk: => T
   ): T = {
-    createTable(client)(tableName)(attributeDefinitions: _*)
+    createTable(tableName)(attributeDefinitions: _*)
     val res = try {
       thunk
     } finally {
@@ -38,14 +45,14 @@ class DynamoClient {
     res
   }
 
-  def usingTable[T](client: AmazonDynamoDB)(tableName: String)(attributeDefinitions: (Symbol, ScalarAttributeType)*)(
+  private def usingTable[T](client: AmazonDynamoDB)(tableName: String)(attributeDefinitions: (Symbol, ScalarAttributeType)*)(
     thunk: => T
   ): Unit = {
     withTable(client)(tableName)(attributeDefinitions: _*)(thunk)
     ()
   }
 
-  def withTableWithSecondaryIndex[T](client: AmazonDynamoDB)(tableName: String, secondaryIndexName: String)
+  private def withTableWithSecondaryIndex[T](client: AmazonDynamoDB)(tableName: String, secondaryIndexName: String)
                                     (primaryIndexAttributes: (Symbol, ScalarAttributeType)*)(secondaryIndexAttributes: (Symbol, ScalarAttributeType)*)(
                                       thunk: => T
                                     ): T = {

@@ -3,29 +3,24 @@ package persistence
 import java.time.Instant
 import java.util.UUID
 
-import com.amazonaws.services.dynamodbv2.model.{AttributeValue, PutItemRequest, PutItemResult}
-import com.gu.scanamo.error.DynamoReadError
-import com.gu.scanamo.ops.ScanamoOps
+import com.gu.scanamo.error.MissingProperty
 import domain.entities._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.mockito._
 import org.scalatest.{AsyncFlatSpec, Matchers}
-import java.util.concurrent.CompletableFuture
 
-import com.amazonaws.handlers.AsyncHandler
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsync
+import scala.concurrent.{ExecutionContext, Future}
 
 class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoSugar {
 
   val budgetId = BudgetId(UUID.randomUUID())
   val clinicalTrialAgreementId = ClinicalTrialAgreementId(UUID.randomUUID())
 
-  val mockDynamoDBClient: AmazonDynamoDBAsync = mock[DynamoClient].client()
+  val mockDynamoClient: DynamoClient = mock[DynamoClient]
+  val budgetRepository: BudgetRepositoryImpl = new BudgetRepositoryImpl(mockDynamoClient)
 
-  val budgetRepository: BudgetRepositoryImpl = new BudgetRepositoryImpl(mockDynamoDBClient)
-
-  val dummyBudgetHeader = BudgetHeader(
+  val dummyBudgetHeader: BudgetHeader = BudgetHeader(
     budgetId,
     clinicalTrialAgreementId,
     StudyId(UUID.randomUUID()),
@@ -35,15 +30,38 @@ class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoS
   )
 
   it should "Insert given Budget header into DB" in {
-    type ScanOps[A] = ScanamoOps[Option[Either[DynamoReadError, A]]]
-
-//    when(ScanamoAsync.exec(dynamoDBClient.client())(any[ScanOps[BudgetHeader]]())) thenReturn Future.successful(None)
-
-    when(mockDynamoDBClient.putItemAsync(any[PutItemRequest], any[AsyncHandler[PutItemRequest, PutItemResult]]))
-      .thenReturn(CompletableFuture.completedFuture(new PutItemResult().addAttributesEntry(budgetId.toString, new AttributeValue("{}"))))
+    when(mockDynamoClient.runScanamoAsync(any())(any[ExecutionContext]))
+      .thenReturn(Future.successful(None))
 
     val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
 
     result.value.map(_ shouldBe Right(()))
+  }
+
+  it should "Overwrite given Budget header into DB" in {
+    when(mockDynamoClient.runScanamoAsync[BudgetHeader](any())(any[ExecutionContext]))
+      .thenReturn(Future.successful(Some(Right(dummyBudgetHeader))))
+
+    val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
+
+    result.value.map(_ shouldBe Right(()))
+  }
+
+  it should "Return error given Budget header into DB" in {
+    when(mockDynamoClient.runScanamoAsync[BudgetHeader](any())(any[ExecutionContext]))
+      .thenReturn(Future.successful(Some(Left(MissingProperty))))
+
+    val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
+
+    result.value.map(_ shouldBe Left(BudgetHeaderWriteError("MissingProperty")))
+  }
+
+  it should "Handle failed Future" in {
+    when(mockDynamoClient.runScanamoAsync[BudgetHeader](any())(any[ExecutionContext]))
+      .thenReturn(Future.failed(new Throwable("Future failed.")))
+
+    val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
+
+    result.value.map(_ shouldBe Left(DataBaseConnectionError))
   }
 }
