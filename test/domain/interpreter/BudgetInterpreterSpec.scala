@@ -15,7 +15,7 @@ class BudgetInterpreterSpec extends AsyncFlatSpec with Matchers {
     SiteId(UUID.randomUUID()),
     Instant.now(),
     Instant.now(),
-    List()
+    Set()
   )
 
   it should "return successful future" in {

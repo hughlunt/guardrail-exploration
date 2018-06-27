@@ -29,6 +29,9 @@ class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionCon
       _.id.toString
     )
 
+  implicit val setFormat: DynamoFormat[Set[BudgetItem]] =
+    DynamoFormat.iso[Set[BudgetItem], List[BudgetItem]](_.toSet)(_.toList)
+
   override def insertBudget(budget: Budget): FEither[Unit] = {
 
     val budgetTable = Table[Budget]("Budget")

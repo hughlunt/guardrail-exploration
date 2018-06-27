@@ -23,15 +23,15 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
   }
 
   object TestBudgetItemInterpreter extends BudgetItemAlgebra[Log] {
-    override def add(items: List[BudgetItem]): Log[Unit] = Writer(List("I've added BudgetItems"), ())
+    override def add(items: Set[BudgetItem]): Log[Unit] = Writer(List("I've added BudgetItems"), ())
 
-    override def retrieveItems(id: BudgetId): Log[List[BudgetItem]] = Writer(List("I've retrieved BudgetItems"), items)
+    override def retrieveItems(id: BudgetId): Log[Set[BudgetItem]] = Writer(List("I've retrieved BudgetItems"), items)
   }
 
   val budgetId = BudgetId(UUID.randomUUID())
   val clinicalTrialAgreementId = ClinicalTrialAgreementId(UUID.randomUUID())
 
-  val items = List(
+  val items = Set(
     BudgetItem(
       BudgetItemId(2),
       ActivityType(UUID.randomUUID()),

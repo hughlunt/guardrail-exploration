@@ -27,7 +27,7 @@ class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoS
     SiteId(UUID.randomUUID()),
     Instant.now(),
     Instant.now(),
-    List()
+    Set()
   )
 
   it should "Insert given Budget header into DB" in {

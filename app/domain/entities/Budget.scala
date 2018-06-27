@@ -8,4 +8,4 @@ case class Budget(id: BudgetId,
                   site: SiteId,
                   validFrom: Instant,
                   validUntil: Instant,
-                  budgetItems: List[BudgetItem])
+                  budgetItems: Set[BudgetItem])
