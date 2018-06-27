@@ -14,12 +14,12 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
   type Log[A] = Writer[List[String], A]
 
   object TestBudgetHeaderInterpreter extends BudgetAlgebra[Log] {
-    override def add(budgetHeader: Budget): Log[Unit] = Writer(List("I've added a BudgetHeader"), ())
+    override def add(budgetHeader: Budget): Log[Unit] = Writer(List("I've added a Budget"), ())
 
-    override def retrieve(id: BudgetId): Log[Budget] = Writer(List("I've retrieved a BudgetHeader"), dummyBudget)
+    override def retrieve(id: BudgetId): Log[Budget] = Writer(List("I've retrieved a Budget"), dummyBudget)
 
     override def retrieveBudgets(clinicalTrialAgreementId: ClinicalTrialAgreementId): Log[Set[Budget]] =
-      Writer(List("I've retrieved a BudgetHeader"), Set(dummyBudget))
+      Writer(List("I've retrieved a Budget"), Set(dummyBudget))
   }
 
   object TestBudgetItemInterpreter extends BudgetItemAlgebra[Log] {
@@ -53,20 +53,20 @@ class BudgetProgramSpec extends FlatSpec with Matchers {
     val actualResult = new BudgetProgram[Log](TestBudgetHeaderInterpreter, TestBudgetItemInterpreter).addBudget(dummyBudget)
 
     actualResult.value shouldBe ((): Unit)
-    actualResult.written shouldBe List("I've added a BudgetHeader", "I've added BudgetItems")
+    actualResult.written shouldBe List("I've added a Budget", "I've added BudgetItems")
   }
 
   it should "retrieve budget" in {
     val actualResult = new BudgetProgram[Log](TestBudgetHeaderInterpreter, TestBudgetItemInterpreter).retrieveBudget(budgetId)
 
     actualResult.value shouldBe dummyBudget
-    actualResult.written shouldBe List("I've retrieved a BudgetHeader", "I've retrieved BudgetItems")
+    actualResult.written shouldBe List("I've retrieved a Budget")
   }
 
   it should "retrieve a set of budgets given Clinical Trial Agreement Id" in {
     val actualResult = new BudgetProgram[Log](TestBudgetHeaderInterpreter, TestBudgetItemInterpreter).retrieveBudgets(clinicalTrialAgreementId)
 
     actualResult.value shouldBe Set(dummyBudget)
-    actualResult.written shouldBe List("I've retrieved a BudgetHeader")
+    actualResult.written shouldBe List("I've retrieved a Budget")
   }
 }

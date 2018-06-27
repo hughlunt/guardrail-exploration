@@ -12,6 +12,6 @@ class BudgetItemInterpreter(implicit ec: ExecutionContext) extends BudgetItemAlg
   override def add(item: List[BudgetItem]): FEither[Unit] =
     EitherT.left(Future.successful(DataBaseConnectionError))
 
-  override def retrieveItems(id: BudgetId): FEither[Set[BudgetItem]] =
-    EitherT.right(Future.successful(Set()))
+  override def retrieveItems(id: BudgetId): FEither[List[BudgetItem]] =
+    EitherT.right(Future.successful(List()))
 }

@@ -14,6 +14,6 @@ class BudgetItemInterpreterSpec extends AsyncFlatSpec with Matchers {
 
   it should "return empty budget items" in {
     val actualResult = new BudgetItemInterpreter().retrieveItems(BudgetId(UUID.randomUUID()))
-    actualResult.value.map(_ shouldBe Right(Set()))
+    actualResult.value.map(_ shouldBe Right(List()))
   }
 }

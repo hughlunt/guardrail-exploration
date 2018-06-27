@@ -16,11 +16,10 @@ class BudgetProgram[F[_] : Monad](budgetAlgebra: BudgetAlgebra[F], budgetItemAlg
       _ <- budgetItemAlgebra.add(budget.budgetItems)
     } yield ()
 
-  def retrieveBudget(id: BudgetId): F[Budget] = ???
-//    for {
-//      header <- budgetAlgebra.retrieve(id)
-//      items <- budgetItemAlgebra.retrieveItems(id)
-//    } yield Budget(header, items)
+  def retrieveBudget(id: BudgetId): F[Budget] =
+    for {
+      budget <- budgetAlgebra.retrieve(id)
+    } yield budget
 
   def retrieveBudgets(clinicalTrialAgreementId: ClinicalTrialAgreementId): F[Set[Budget]] =
     budgetAlgebra.retrieveBudgets(clinicalTrialAgreementId)
