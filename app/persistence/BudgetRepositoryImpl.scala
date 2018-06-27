@@ -49,5 +49,4 @@ class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionCon
       ).recover { case e: Throwable => Left(DataBaseConnectionError) }
     )
   }
-  //  override def insertBudgetItems(budgetItems: Set[BudgetItem]): FEither[Unit] = ???
 }
