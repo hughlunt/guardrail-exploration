@@ -4,7 +4,6 @@ import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.dynamodbv2._
 import com.amazonaws.services.dynamodbv2.model._
-import com.google.inject.Singleton
 import com.gu.scanamo.ScanamoAsync
 import com.gu.scanamo.error.DynamoReadError
 import com.gu.scanamo.ops.ScanamoOps
@@ -12,7 +11,6 @@ import com.gu.scanamo.ops.ScanamoOps
 import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
 class DynamoClient {
 
   lazy val client: AmazonDynamoDBAsync = AmazonDynamoDBAsyncClient.asyncBuilder()

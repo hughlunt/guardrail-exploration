@@ -15,34 +15,35 @@ import scala.concurrent.ExecutionContext
 class BudgetRepositoryImpl(dynamoClient: DynamoClient)(implicit ec: ExecutionContext)
   extends BudgetRepository {
 
-  implicit val jodaStringFormat = DynamoFormat.coercedXmap[Instant, String, IllegalArgumentException](
-    Instant.parse(_)
-  )(
-    _.toString
-  )
+  implicit val jodaStringFormat: DynamoFormat[Instant] =
+    DynamoFormat.coercedXmap[Instant, String, IllegalArgumentException](
+      Instant.parse(_)
+    )(
+      _.toString
+    )
 
-  implicit val idFormat = DynamoFormat.coercedXmap[BudgetId, String, IllegalArgumentException](
-    s => BudgetId(UUID.fromString(s))
-  )(
-    _.id.toString
-  )
+  implicit val idFormat: DynamoFormat[BudgetId] =
+    DynamoFormat.coercedXmap[BudgetId, String, IllegalArgumentException](
+      s => BudgetId(UUID.fromString(s))
+    )(
+      _.id.toString
+    )
 
-  override def insertBudgetHeader(budgetHeader: BudgetHeader): FEither[Unit] = {
+  override def insertBudget(budget: Budget): FEither[Unit] = {
 
-    val budgetTable = Table[BudgetHeader]("Budget")
+    val budgetTable = Table[Budget]("Budget")
 
-    val operations: ScanamoOps[Option[Either[DynamoReadError, BudgetHeader]]] = for {
-      result <- budgetTable.put(budgetHeader)
+    val operations: ScanamoOps[Option[Either[DynamoReadError, Budget]]] = for {
+      result <- budgetTable.put(budget)
     } yield result
-
 
     EitherT(
       dynamoClient.runScanamoAsync(operations).map(
         _.fold[Either[Error, Unit]](Right(())) {
           case Left(error) => Left(BudgetHeaderWriteError(error.toString))
           case Right(_) => Right(())
-      }
-    ).recover{case e: Throwable => Left(DataBaseConnectionError)}
+        }
+      ).recover { case e: Throwable => Left(DataBaseConnectionError) }
     )
   }
   //  override def insertBudgetItems(budgetItems: Set[BudgetItem]): FEither[Unit] = ???

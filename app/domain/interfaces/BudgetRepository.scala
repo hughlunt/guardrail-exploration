@@ -1,10 +1,10 @@
 package domain.interfaces
 
-import domain.entities.{BudgetHeader, BudgetItem, FEither}
+import domain.entities.{Budget, FEither}
 
 trait BudgetRepository {
 
-  def insertBudgetHeader(budgetHeader: BudgetHeader): FEither[Unit]
+  def insertBudget(budgetHeader: Budget): FEither[Unit]
 
 //  def insertBudgetItems(budgetItems: Set[BudgetItem]): FEither[Unit]
 }

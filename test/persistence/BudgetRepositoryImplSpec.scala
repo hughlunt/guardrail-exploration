@@ -20,47 +20,48 @@ class BudgetRepositoryImplSpec extends AsyncFlatSpec with Matchers with MockitoS
   val mockDynamoClient: DynamoClient = mock[DynamoClient]
   val budgetRepository: BudgetRepositoryImpl = new BudgetRepositoryImpl(mockDynamoClient)
 
-  val dummyBudgetHeader: BudgetHeader = BudgetHeader(
-    budgetId,
-    clinicalTrialAgreementId,
+  val dummyBudget = Budget(
+    BudgetId(UUID.randomUUID()),
+    ClinicalTrialAgreementId(UUID.randomUUID()),
     StudyId(UUID.randomUUID()),
     SiteId(UUID.randomUUID()),
     Instant.now(),
-    Instant.now()
+    Instant.now(),
+    List()
   )
 
   it should "Insert given Budget header into DB" in {
     when(mockDynamoClient.runScanamoAsync(any())(any[ExecutionContext]))
       .thenReturn(Future.successful(None))
 
-    val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
+    val result = budgetRepository.insertBudget(dummyBudget)
 
     result.value.map(_ shouldBe Right(()))
   }
 
   it should "Overwrite given Budget header into DB" in {
-    when(mockDynamoClient.runScanamoAsync[BudgetHeader](any())(any[ExecutionContext]))
-      .thenReturn(Future.successful(Some(Right(dummyBudgetHeader))))
+    when(mockDynamoClient.runScanamoAsync[Budget](any())(any[ExecutionContext]))
+      .thenReturn(Future.successful(Some(Right(dummyBudget))))
 
-    val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
+    val result = budgetRepository.insertBudget(dummyBudget)
 
     result.value.map(_ shouldBe Right(()))
   }
 
   it should "Return error given Budget header into DB" in {
-    when(mockDynamoClient.runScanamoAsync[BudgetHeader](any())(any[ExecutionContext]))
+    when(mockDynamoClient.runScanamoAsync[Budget](any())(any[ExecutionContext]))
       .thenReturn(Future.successful(Some(Left(MissingProperty))))
 
-    val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
+    val result = budgetRepository.insertBudget(dummyBudget)
 
     result.value.map(_ shouldBe Left(BudgetHeaderWriteError("MissingProperty")))
   }
 
   it should "Handle failed Future" in {
-    when(mockDynamoClient.runScanamoAsync[BudgetHeader](any())(any[ExecutionContext]))
+    when(mockDynamoClient.runScanamoAsync[Budget](any())(any[ExecutionContext]))
       .thenReturn(Future.failed(new Throwable("Future failed.")))
 
-    val result = budgetRepository.insertBudgetHeader(dummyBudgetHeader)
+    val result = budgetRepository.insertBudget(dummyBudget)
 
     result.value.map(_ shouldBe Left(DataBaseConnectionError))
   }
