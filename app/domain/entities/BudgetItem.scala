@@ -2,8 +2,7 @@ package domain.entities
 
 import java.time.Instant
 
-case class BudgetItem(id: BudgetItemId,
-                      budgetId: BudgetId,
+case class BudgetItem(budgetItemId: BudgetItemId,
                       activityType: ActivityType,
                       payee: PayeeId,
                       validFrom: Instant,

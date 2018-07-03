@@ -8,15 +8,15 @@ import scala.concurrent.Future
 
 package object entities {
 
-  case class StudyId(id: UUID) extends AnyVal
+  case class StudyId(studyId: UUID) extends AnyVal
 
-  case class SiteId(id: UUID) extends AnyVal
+  case class SiteId(siteId: UUID) extends AnyVal
 
   case class PayeeId(id: UUID) extends AnyVal
 
   case class BudgetId(id: UUID) extends AnyVal
 
-  case class ClinicalTrialAgreementId(id: UUID) extends AnyVal
+  case class ClinicalTrialAgreementId(ctaId: UUID) extends AnyVal
 
   case class ActivityType(id: UUID) extends AnyVal
 
@@ -24,6 +24,14 @@ package object entities {
 
   type FEither[T] = EitherT[Future, Error, T] // = EitherT[Future[Either[Error, T]]]
 
-  case class Error(message: String) extends AnyVal
+  sealed trait Error {
+    val message: String
+  }
+
+  case class BudgetHeaderWriteError(message: String) extends Error
+
+  case object DataBaseConnectionError extends Error {
+    val message: String = "Failed to connect to database."
+  }
 
 }

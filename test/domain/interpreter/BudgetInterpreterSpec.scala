@@ -6,31 +6,31 @@ import java.util.UUID
 import domain.entities._
 import org.scalatest.{AsyncFlatSpec, Matchers}
 
-class BudgetHeaderInterpreterSpec extends AsyncFlatSpec with Matchers {
+class BudgetInterpreterSpec extends AsyncFlatSpec with Matchers {
 
-  val dummyBudgetHeader = BudgetHeader(
+  val dummyBudget = Budget(
     BudgetId(UUID.randomUUID()),
     ClinicalTrialAgreementId(UUID.randomUUID()),
     StudyId(UUID.randomUUID()),
     SiteId(UUID.randomUUID()),
     Instant.now(),
-    Instant.now()
+    Instant.now(),
+    Set()
   )
 
   it should "return successful future" in {
-    val result: FEither[Unit] = new BudgetHeaderInterpreter().add(dummyBudgetHeader)
+    val result: FEither[Unit] = new BudgetInterpreter().add(dummyBudget)
     result.value.map(either => either shouldBe Right(()))
   }
 
-  it should "return a budget header" in {
+  it should "return a budget" in {
     recoverToSucceededIf[Throwable] {
-      new BudgetHeaderInterpreter().retrieve(BudgetId(UUID.randomUUID())).value
+      new BudgetInterpreter().retrieve(BudgetId(UUID.randomUUID())).value
     }
   }
 
-  it should "return a budget headers  by clinical trail agreement id" in {
-    val result = new BudgetHeaderInterpreter().retrieveBudgetHeaders(ClinicalTrialAgreementId(UUID.randomUUID()))
+  it should "return a budgets  by clinical trail agreement id" in {
+    val result = new BudgetInterpreter().retrieveBudgets(ClinicalTrialAgreementId(UUID.randomUUID()))
     result.value.map(either => either shouldBe Right(Set()))
-
   }
 }
