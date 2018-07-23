@@ -1,6 +1,7 @@
 package controllers
 
 import play.api.mvc._
+import buildInfo.BuildInfo
 
 case class UtilityController(controllerComponents: ControllerComponents)
     extends BaseController {
@@ -10,6 +11,6 @@ case class UtilityController(controllerComponents: ControllerComponents)
   }
 
   def applicationVersion() = Action { implicit request: Request[AnyContent] =>
-    Ok("Version XYZ")
+    Ok(BuildInfo.toJson)
   }
 }

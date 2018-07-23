@@ -1,4 +1,4 @@
-import controllers.HomeController
+import controllers.{HomeController, UtilityController}
 import play.api.mvc.EssentialFilter
 import play.api.{Application, ApplicationLoader, BuiltInComponentsFromContext}
 import router.Routes
@@ -16,8 +16,11 @@ class SiteBudgetsComponents(context: Context)
     extends BuiltInComponentsFromContext(context) {
 
   lazy val homeController: HomeController = HomeController(controllerComponents)
+  lazy val utilityController: UtilityController = UtilityController(
+    controllerComponents)
 
-  lazy val router = new Routes(httpErrorHandler, homeController)
+  lazy val router =
+    new Routes(httpErrorHandler, homeController, utilityController)
 
   override def httpFilters: Seq[EssentialFilter] = Seq()
 }
