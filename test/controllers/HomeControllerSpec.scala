@@ -14,7 +14,7 @@ import play.api.test.Helpers._
 class HomeControllerSpec extends PlaySpec with Results {
 
   "HomeController GET" should {
-    "render the index page from a new instance of controller" in {
+    "return the index result from a new instance of controller" in {
       val controller = HomeController(stubControllerComponents())
       val home = controller.index().apply(FakeRequest(GET, "/"))
 
