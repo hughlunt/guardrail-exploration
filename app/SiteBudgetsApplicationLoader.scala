@@ -11,12 +11,12 @@ class SiteBudgetsApplicationLoader extends ApplicationLoader {
 
 import play.api.ApplicationLoader.Context
 
-class SiteBudgetsComponents(context: Context) extends BuiltInComponentsFromContext(context)
-  with controllers.AssetsComponents {
+class SiteBudgetsComponents(context: Context) extends BuiltInComponentsFromContext(context) {
 
-  lazy val homeController: HomeController = new HomeController(controllerComponents)
+  lazy val homeController: HomeController = HomeController(controllerComponents)
 
-  override def router = new Routes(httpErrorHandler, homeController, assets)
+//  override def router = new Routes(httpErrorHandler, homeController)
+  lazy val router = new Routes(httpErrorHandler, homeController)
 
   override def httpFilters: Seq[EssentialFilter] = Seq()
 }

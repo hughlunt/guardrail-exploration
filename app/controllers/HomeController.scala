@@ -5,9 +5,8 @@ import play.api.mvc._
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
- */
-class HomeController (cc: ControllerComponents) extends AbstractController(cc) {
-
+  */
+case class HomeController (controllerComponents: ControllerComponents) extends BaseController {
   /**
    * Create an Action to render an HTML page.
    *
