@@ -1,3 +1,4 @@
+
 name := """site_budgets"""
 organization := "com.mdsol"
 
@@ -5,6 +6,20 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
+  .enablePlugins(BuildInfoPlugin)
+  .settings(
+    buildInfoKeys := Seq[BuildInfoKey](
+      version,
+      scalaVersion,
+      sbtVersion,
+      BuildInfoKey.action("gitCommit") {
+        git.gitHeadCommit.value.getOrElse("Not Set")
+      }
+    ),
+    buildInfoPackage := "buildInfo",
+    buildInfoOptions += BuildInfoOption.ToMap,
+    buildInfoOptions += BuildInfoOption.ToJson,
+    buildInfoOptions += BuildInfoOption.BuildTime)
 
 scalaVersion := "2.12.6"
 
