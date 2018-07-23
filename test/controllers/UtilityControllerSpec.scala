@@ -16,4 +16,15 @@ class UtilityControllerSpec extends PlaySpec with Results  {
       contentAsString(statusResult) mustBe """{"status":"OK"}"""
     }
   }
+
+  "UtilityController GET /app_version" should {
+    "return a build information json from a new instance of controller" in {
+      val controller = UtilityController(stubControllerComponents())
+      val statusResult = controller.applicationVersion().apply(FakeRequest(GET, "app_version"))
+
+      status(statusResult) mustBe OK
+      contentType(statusResult) mustBe Some("application/json")
+//      contentAsString(statusResult) mustBe """{"status":"OK"}"""
+    }
+  }
 }

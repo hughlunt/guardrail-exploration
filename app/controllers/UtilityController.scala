@@ -12,6 +12,6 @@ case class UtilityController(controllerComponents: ControllerComponents)
   }
 
   def applicationVersion() = Action { implicit request: Request[AnyContent] =>
-    Ok(BuildInfo.toJson)
+    Ok(BuildInfo.toJson).as(JSON)
   }
 }
