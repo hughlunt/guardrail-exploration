@@ -3,7 +3,23 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET        /                   controllers.HomeController.index
+### NoDocs ###
+GET        /                   controllers.SwaggerController.redirectDocs
 
+#GET        /                   controllers.HomeController.index
+
+###
+ #  summary: Get app status
+ #  responses:
+ #    200:
+ #      description: success
+ ###
 GET        /app_status         controllers.UtilityController.applicationStatus
+
+###
+ #  summary: Get app version
+ #  responses:
+ #    200:
+ #      description: success
+ ###
 GET        /app_version        controllers.UtilityController.applicationVersion
