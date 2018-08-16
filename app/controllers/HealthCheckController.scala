@@ -1,11 +1,10 @@
 package controllers
 
-import javax.inject._
 import play.api.libs.json.Json
 import play.api.mvc._
 
-@Singleton
-class HealthCheckController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+case class HealthCheckController(controllerComponents: ControllerComponents)
+    extends BaseController {
 
   def getHealth = Action { implicit request: Request[AnyContent] =>
     Ok(Json.parse("""{"status":"OK"}"""))
