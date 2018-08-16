@@ -1,10 +1,4 @@
 ### NoDocs ###
-GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
-
-### NoDocs ###
-GET   /assets/*file                 controllers.Assets.versioned(path="/public", file: Asset)
-
-### NoDocs ###
 GET     /                           controllers.SwaggerController.redirectDocs
 
 ###
