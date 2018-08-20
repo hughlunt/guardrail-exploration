@@ -1,6 +1,6 @@
 package controllers
 
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play._
 import play.api.mvc.Results
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -24,7 +24,14 @@ class UtilityControllerSpec extends PlaySpec with Results  {
 
       status(statusResult) mustBe OK
       contentType(statusResult) mustBe Some("application/json")
-//      contentAsString(statusResult) mustBe """{"status":"OK"}"""
+      val resultBodyText: String = contentAsString(statusResult)
+
+      resultBodyText.contains("builtAtMillis") mustBe true
+      resultBodyText.contains("gitCommit") mustBe true
+      resultBodyText.contains("scalaVersion") mustBe true
+      resultBodyText.contains("version") mustBe true
+      resultBodyText.contains("sbtVersion") mustBe true
+      resultBodyText.contains("builtAtString") mustBe true
     }
   }
 }
