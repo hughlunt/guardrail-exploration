@@ -1,0 +1,122 @@
+---
+swagger: '2.0'
+info:
+  description: Site Budgets API
+  version: '1.0'
+  title: Site Budgets
+host: localhost
+basePath: "/"
+schemes:
+- http
+paths:
+  budget:
+    post:
+      operationId: createBudget
+      x-scala-package: budget
+      summary: Create budget
+      description: Creates a budget.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: "#/definitions/BudgetRequest"
+      responses:
+        200:
+          description: success
+        400:
+          description: The request contained invalid parameters
+  app_status:
+    get:
+      operationId: getHealth
+      x-scala-package: healthcheck
+      summary: Get app status
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: "#/definitions/HealthCheckResponse"
+definitions:
+  HealthCheckResponse:
+    type: object
+    properties:
+      appStatus:
+        type: string
+        example: ok
+        description: Overall status of app
+  BudgetRequest:
+    type: object
+    required:
+    - study
+    - site
+    - clinicalTrialAgreement
+    - validFrom
+    - validUntil
+    - budgetItems
+    properties:
+      study:
+        type: string
+        example: 00d267ab-23a7-496d-b08a-3133bb63e945
+        description: Study uuid.
+        format: uuid
+      site:
+        type: string
+        example: 00d267ab-23a7-496d-b08a-3133bb63e945
+        description: Site uuid.
+        format: uuid
+      clinicalTrialAgreement:
+        type: string
+        example: 00d267ab-23a7-496d-b08a-3133bb63e945
+        description: CTA uuid.
+        format: uuid
+      validFrom:
+        type: string
+        example: '2018-08-09T16:06:05Z'
+        description: Date budget is valid from.
+        format: date-time
+      validUntil:
+        type: string
+        example: '2018-08-09T16:06:05Z'
+        description: Date budget is valid until.
+        format: date-time
+      budgetItems:
+        type: array
+        items:
+          $ref: "#/definitions/BudgetItem"
+  BudgetItem:
+    type: object
+    required:
+    - activityType
+    - payee
+    - validFrom
+    - validUntil
+    - amount
+    properties:
+      activityType:
+        type: string
+        example: 00d267ab-23a7-496d-b08a-3133bb63e945
+        description: Activity Type uuid.
+        format: uuid
+      payee:
+        type: string
+        example: 00d267ab-23a7-496d-b08a-3133bb63e945
+        description: Payee uuid.
+        format: uuid
+      validFrom:
+        type: string
+        example: '2018-08-09T16:06:05Z'
+        description: Date budget item is valid from.
+        format: date-time
+      validUntil:
+        type: string
+        example: '2018-08-09T16:06:05Z'
+        description: Date budget item is valid until.
+        format: date-time
+      amount:
+        type: number
+        format: double
+        description: Amount to be paid.
