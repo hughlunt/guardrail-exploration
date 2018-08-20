@@ -1,16 +1,15 @@
 package controllers
 
 import org.scalatestplus.play._
-import org.scalatestplus.play.guice._
-import play.api.test._
+import play.api.mvc.Results
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class HealthCheckControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+class HealthCheckControllerSpec extends PlaySpec with Results {
 
   "HomeController GET" should {
-
     "return OK" in {
-      val controller = new HealthCheckController(stubControllerComponents())
+      val controller = HealthCheckController(stubControllerComponents())
       val home = controller.getHealth.apply(FakeRequest(GET, "/"))
 
       status(home) mustBe OK

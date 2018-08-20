@@ -1,12 +1,14 @@
 package controllers
 
-import com.google.inject.Inject
-import play.api.mvc._
+import play.api.mvc.{BaseController, ControllerComponents}
 
-class SwaggerController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+case class SwaggerController(controllerComponents: ControllerComponents)
+  extends BaseController {
 
-  def redirectDocs = Action {
-    Redirect(url = "/assets/lib/swagger-ui/index.html", queryString = Map("url" -> Seq("/assets/swagger.json")))
+  def redirectDocs() = Action {
+    Redirect(
+      url = "/assets/lib/swagger-ui/index.html",
+      queryString = Map("url" -> Seq("/assets/swagger.json"))
+    )
   }
-
 }

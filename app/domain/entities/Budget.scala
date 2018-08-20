@@ -3,7 +3,7 @@ package domain.entities
 import java.time.Instant
 
 case class Budget(id: BudgetId,
-                  clinicalTrialAgreementHaha: ClinicalTrialAgreementId,
+                  clinicalTrialAgreement: ClinicalTrialAgreementId,
                   study: StudyId,
                   site: SiteId,
                   validFrom: Instant,
