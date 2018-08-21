@@ -1,36 +1,31 @@
+import Dependencies._
+import sbt.Keys._
 
-name := """site_budgets"""
-organization := "com.mdsol"
+lazy val root = (project in file(".")).
+  settings(
+    inThisBuild(List(
+      organization := "com.mdsol",
+      scalaVersion := "2.12.6",
+      version      := "0.1.0-SNAPSHOT"
+    )),
+    name := "siteBudgets",
+    libraryDependencies ++= Seq(
+      scalaTest,
+      mockito
+    ).map(_ % Test),
+    libraryDependencies ++= circe ++ Seq(
+      akkahttp,
+      akkaStream,
+      catsCore,
+      scanamo
+    )
+  )
 
-version := "1.0-SNAPSHOT"
+lazy val openApiFile = "src/main/resources/swagger.yaml"
+guardrailTasks in Compile := List(
+  Server(file(openApiFile), pkg="com.mdsol.server")
+)
 
-lazy val root = (project in file("."))
-  .enablePlugins(PlayScala, BuildInfoPlugin, SwaggerPlugin)
-  .settings(
-    buildInfoKeys := Seq[BuildInfoKey](
-      version,
-      scalaVersion,
-      sbtVersion,
-      BuildInfoKey.action("gitCommit") {
-        git.gitHeadCommit.value.getOrElse("Not Set")
-      }
-    ),
-    buildInfoPackage := "buildInfo",
-    buildInfoOptions += BuildInfoOption.ToMap,
-    buildInfoOptions += BuildInfoOption.ToJson,
-    buildInfoOptions += BuildInfoOption.BuildTime)
-
-scalaVersion := "2.12.6"
-
-libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1"
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
-libraryDependencies += "org.webjars" % "swagger-ui" % "2.2.0"
-libraryDependencies += "com.gu" %% "scanamo" % "1.0.0-M6"
-libraryDependencies += "org.mockito" % "mockito-core" % "2.19.0" % Test
-
-swaggerDomainNameSpaces := Seq("domain.entities")
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "com.mdsol.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "com.mdsol.binders._"
+guardrailTasks in Test := List(
+  Client(file(openApiFile), pkg="com.mdsol.client")
+)

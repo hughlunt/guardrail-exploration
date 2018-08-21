@@ -1,9 +1,0 @@
----
-  swagger: "2.0"
-  info:
-    title: "Site Budgets"
-    description: "Site Budgets API"
-  consumes:
-    - application/json
-  produces:
-    - application/json
