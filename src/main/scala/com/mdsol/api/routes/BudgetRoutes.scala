@@ -7,5 +7,5 @@ import scala.concurrent.Future
 
 class BudgetRoutes extends BudgetHandler {
   override def createBudget(respond: BudgetResource.createBudgetResponse.type)(body: BudgetRequest): Future[BudgetResource.createBudgetResponse] =
-    Future.successful(BudgetResource.createBudgetResponseOK)
+    Future.successful(respond.OK)
 }
